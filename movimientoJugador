@@ -1,0 +1,55 @@
+boolean leftPressed, rightPressed, upPressed, downPressed;
+int x = 0;
+int y = 0;
+void setup (){
+size(800,600);
+ellipse(x,y,40,40);
+x = 400;
+y = 300;
+}
+
+void draw(){
+background(230,100,85);
+
+// la puta vitoria
+
+if (leftPressed) {
+x -=3;
+}
+if (rightPressed) {
+x +=3;
+}
+if (upPressed) {
+y -=3;
+}
+if (downPressed) {
+y +=3;
+}
+ellipse(x,y,40,40);
+
+}
+
+void keyPressed() {
+
+if (keyCode == LEFT)
+leftPressed = true;
+if (keyCode == RIGHT)
+rightPressed = true;
+if (keyCode == UP)
+upPressed = true;
+if (keyCode == DOWN)
+downPressed = true;
+
+}
+
+void keyReleased() {
+if (keyCode == LEFT)
+leftPressed = false;
+if (keyCode == RIGHT)
+rightPressed = false;
+if (keyCode == UP)
+upPressed = false;
+if (keyCode == DOWN)
+downPressed = false;
+
+}
