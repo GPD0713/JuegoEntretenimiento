@@ -1,0 +1,39 @@
+//Clase de el jugador
+
+class Jugador {
+  
+  public float x, y, xx, yy, r;
+  
+  Jugador(int _x, int _y) {
+    xx = _x;
+    yy = _y;
+    x = mapa.posicion(xx, yy).x;
+    y = mapa.posicion(xx, yy).y;
+    r = 15;
+  }
+  
+  public void pintar() {
+    fill(255, 133, 58);
+    ellipse(x, y, r*2, r*2);
+  }
+  
+  void movimiento() {
+    if(teclas[0] == 1) {
+      yy -= 1;
+    } else if(teclas[1] == 1) {
+      yy += 1;
+    } else if(teclas[2] == 1) {
+      xx -= 1;
+    } else if(teclas[3] == 1) {
+      xx += 1;
+    }
+    if(yy > 7) yy --;
+    if(yy < 0) yy ++;
+    if(xx > 7) xx --;
+    if(xx < 0) xx ++;
+    yy = constrain(yy, 0, mapa.nCuadrosY);
+    x = mapa.posicion(xx, yy).x;
+    y = mapa.posicion(xx, yy).y;
+    println(xx + "  " + yy);
+  }
+}
