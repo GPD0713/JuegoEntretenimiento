@@ -1,0 +1,43 @@
+//Clase para el mapa 
+
+class Mapa {
+  
+  float w, h;
+  int nCuadrosX, nCuadrosY;
+  public boolean [][] mPosiciones;
+  
+  Mapa(int _nCuadrosX, int _nCuadrosY){
+    nCuadrosX = _nCuadrosX;
+    nCuadrosY = _nCuadrosY;
+    w = width/nCuadrosX;
+    h = height/nCuadrosY;
+    mPosiciones = new boolean[nCuadrosX][nCuadrosY];
+    for(int i=0; i<nCuadrosX; i++) {
+      for(int j=0; j<nCuadrosY; j++) {
+        mPosiciones[i][j] = false;
+      }
+    }
+  }
+  
+  public void pintar() {
+    for(int i=0; i<nCuadrosX; i++) {
+      for(int j=0; j<nCuadrosY; j++) {
+        fill(25, 178, 189);
+        stroke(149, 44, 44);
+        rect(i*w, j*h, w, h);
+      }
+    }
+  }
+  
+  public void cambiarM(int posicionX, int posicionY) {
+    mPosiciones[posicionX][posicionY] = true;
+  }
+  
+  PVector posicion(float posX, float posY) {
+    float _x = (posX * w) + (w/2);
+    float _y = (posY * h) + (h/2);
+    PVector pos = new PVector(_x, _y);
+    return pos;
+  }
+  
+}
