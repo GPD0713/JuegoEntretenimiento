@@ -1,0 +1,25 @@
+//Input del jugador
+
+void keyPressed() {
+  //println(keyCode);
+  //87, 83, 65, 68
+   if(apretar) {
+    if(keyCode == 87) teclas[0] = 1;
+    else if(keyCode == 83) teclas[1] = 1;
+    else if(keyCode == 65) teclas[2] = 1;
+    else if(keyCode == 68) teclas[3] = 1;
+    apretar = false;
+    println(keyCode);
+    p.movimiento();
+  }
+}
+
+void keyReleased() {
+  if(!apretar) {
+    if(keyCode == 87) teclas[0] = 0;
+    else if(keyCode == 83) teclas[1] = 0;
+    else if(keyCode == 65) teclas[2] = 0;
+    else if(keyCode == 68) teclas[3] = 0;
+    apretar = true;
+  }
+}
