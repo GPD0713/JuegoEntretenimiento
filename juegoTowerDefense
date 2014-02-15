@@ -1,0 +1,29 @@
+//Juego Tower Defense
+//Entretenimiento Interactivo
+//GPD0713
+
+Mapa mapa;
+Jugador p;
+
+int [] teclas = new int[5];
+boolean apretar;
+
+void setup() {
+  size(400, 400);
+  mapa = new Mapa(8, 8);
+  inicio();
+}
+
+void inicio() {
+   p = new Jugador(6, 4);
+  apretar = true;
+  for(int i=0; i<teclas.length; i++)
+    teclas[i] = 0;
+}
+
+void draw() {
+  background(100);
+  
+  mapa.pintar();
+  p.pintar();
+}
