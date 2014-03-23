@@ -1,0 +1,67 @@
+//Juego final de programacion
+//Programacion por Matz
+
+Menu menu;
+Fin fin;
+Nivel01 nivel01;
+Instrucciones instrucciones;
+int state;
+int sumaBala;
+int w;
+int h;
+
+void setup() {
+  
+  size(900, 600);
+  w = width/2;
+  h = height/2;
+  imageMode(CENTER);
+  textAlign(CENTER, CENTER);
+  state = 0;
+  cambiarPantalla(0);
+  sumaBala = 0;
+  
+}
+
+public void cambiarPantalla(int pantalla) {
+  state = pantalla;
+  
+  switch(state) {
+    
+    case 0: 
+      menu = new Menu();
+    break;
+    case 1: 
+      nivel01 = new Nivel01();
+    break;
+    case 2: 
+      instrucciones = new Instrucciones();
+    break;
+    case 3: 
+      fin = new Fin();
+    break;
+  }
+  
+}
+
+void draw() {
+
+  switch(state) {
+    
+    case 0: 
+      menu.pintar();
+    break;
+    case 1: 
+      nivel01.pintar();
+    break;
+    case 2: 
+      instrucciones.pintar();
+    break;
+    case 3: 
+      fin.pintar();
+    break;
+  
+  }
+  
+  
+}
