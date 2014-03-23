@@ -1,0 +1,123 @@
+//clase para pintar malos
+
+class dibujarMalos {
+  
+  float x, y, vida, r, v;
+  boolean entro;
+  ArrayList<Malos> m;
+  int contador, dirOleada, nMalo; 
+  IntList nMalos;
+  public int nPintados, m02;
+  int [] pos;
+  int c;
+  int index;
+  int contOleadas;
+  int tipo;
+  int dano;
+  int nLineas;
+  boolean malo2;
+  boolean termino;
+
+  color col;
+  
+  dibujarMalos(int _malos1, int _malos2, int _dirOleada, int _nLineas) {
+    
+      nMalos = new IntList(); nMalos.append(_malos2); nMalos.append(_malos1);
+      dirOleada = _dirOleada; nLineas = _nLineas;
+      
+      c = _malos2 + _malos1;
+
+      vida = 0; dano = 0; r = 0; v = 0;  x = 0; y = 0; index = 0;
+      
+      contOleadas = 0;
+      contador = 0;
+      nPintados = 0;
+      tipo = 0;
+      
+      for(int i=0; i<_malos1; i++) nMalos.append(1);
+      for(int i=0; i<_malos2; i++) nMalos.append(2);
+
+      nMalos.shuffle();
+      
+      m = new ArrayList<Malos>();
+      
+  }
+  
+  public void pintar() {
+    maloNuevo();
+    for(int i=0; i<m.size(); i++) {
+      Malos malo = m.get(i);
+      malo.pintar();
+    }
+  }
+  
+  void maloNuevo() {
+
+    if(contador == 60) {
+       if(nMalos.get(index) == 2) {
+         
+         vida = 6;
+         v = 0.8;
+         dano = 2;
+         tipo = 2;
+         r  = 16;
+         col = color(100, 227, 250);
+          
+       } else {
+         
+         vida = 4;
+         v = 0.8;
+         dano = 1;
+         tipo = 1;
+         r = 16;
+         col = color(200, 100, 250);
+         
+       }
+      
+      if(nLineas > 1) {
+    
+        m.add(new Malos(vida, r, dirOleada, tipo, col, v, dano, 20));
+ 
+        m.add(new Malos(vida, r, dirOleada, tipo, col, v, dano, -20));
+        
+      } else {
+        
+        m.add(new Malos(vida, r, dirOleada, tipo, col, v, dano, 0));
+        
+      }
+      
+       index ++;
+       contador = 0;
+       c --;
+       if(c <= 0){
+         //nivel01.oleada.contador = 0;
+         nivel01.oleada.nuevo = true;
+         nivel01.oleada.counter = 300;
+         contOleadas ++;
+         //println(contOleadas);
+         if(contOleadas == 12 ) {
+           nivel01.oleada.contador = 0;
+           nivel01.oleada.dirOleada ++;
+           nivel01.oleada.nuevo = false;
+           nivel01.oleada.counter = 420;
+         }
+
+       }
+       
+    }
+    
+    if(c > 0) {
+      contador ++;
+    }
+    
+  }
+  
+  PVector posicion(int j) {
+    Malos malo = m.get(j);
+    PVector p = malo.posicion();
+    return p;
+  }
+  
+  
+  
+}
