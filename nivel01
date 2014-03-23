@@ -1,0 +1,129 @@
+class Nivel01 {
+  
+  boolean acabo;
+  public Mapa map;
+  public int pixelsLength;
+  color cMalos;
+  public String txt;
+  int vida, puntos, suma, c;
+  boolean input;
+  int h;
+  
+  Jugador jugador;
+  torreDefender defense;
+  crearTorres torre;
+  Oleadas oleada;
+  Textos texto;
+  Button btnTorre1;
+  Button btnTorre2;
+  Button btnTorre3;
+  
+  Nivel01() {
+    
+    vida = 25;
+    c = 0;
+    cMalos = color(255, 255, 0);
+    puntos = 3200;
+    suma = 0;
+    input = false;
+    acabo = false;
+    map = new Mapa("mapa.png", "mapaTorres.png");
+    jugador = new Jugador((width/2), 100);
+    defense = new torreDefender(15);
+    torre = new crearTorres();
+    oleada = new Oleadas();
+    texto = new Textos();
+    
+    textSize(10);
+    btnTorre1 = new Button("./buttons/btnNormal.png", "./buttons/btnOver.png", "./buttons/btnPressed.png");
+    btnTorre1.setPosition(75, 500);
+    btnTorre1.setText("Torre Sencilla");
+    
+    btnTorre2 = new Button("./buttons/btnNormal.png", "./buttons/btnOver.png", "./buttons/btnPressed.png");
+    btnTorre2.setPosition(75, 530);
+    btnTorre2.setText("Torre Normal");
+    
+    btnTorre3 = new Button("./buttons/btnNormal.png", "./buttons/btnOver.png", "./buttons/btnPressed.png");
+    btnTorre3.setPosition(75, 560);
+    btnTorre3.setText("Torre Master");
+    
+  }
+
+  public void pintar() {
+    
+   if(btnTorre1.action()) torre.elegirTorre = 0;
+   if(btnTorre2.action()) torre.elegirTorre = 1;
+   if(btnTorre3.action()) torre.elegirTorre = 2;
+    
+    if(vida <= 0) {
+      txt = "perdiste";
+      acabo = true;
+      map.tinta(255);
+    }
+    
+    if(acabo) cambiarPantalla(3);
+    map.pintar();
+    jugador.pintar();
+    defense.pintar();
+    torre.pintar();
+    oleada.pintar();
+    texto.pintar();
+    
+    textSize(10);
+    btnTorre1.pintar();
+    btnTorre2.pintar();
+    btnTorre3.pintar();   
+    
+  }
+  
+  void puntaje(int _n) {
+    
+    puntos += _n;
+    
+  }
+  
+void mouseApretar() {
+    
+    if(input) torre.mousePressed();
+    else jugador.mousePressed();
+    
+    btnTorre1.mouseApretar();
+    btnTorre2.mouseApretar();
+    btnTorre3.mouseApretar();
+    
+  }
+  
+  public void mouseMover() {
+    btnTorre1.mouseMover();
+    btnTorre2.mouseMover();
+    btnTorre3.mouseMover();
+  }
+  
+  public void mouseSoltar() {
+    if(input) torre.mouseReleased();
+    else jugador.mouseReleased();
+    
+    btnTorre1.mouseSoltar();
+    btnTorre2.mouseSoltar();
+    btnTorre3.mouseSoltar();
+  }
+  
+  public void tinta() {
+   
+    map.tinta(100);
+    
+  }
+  
+  public void keyPressed() {
+    if(keyCode == 32) input = true;
+    torre.keyPressed();
+    jugador.keyPressed();
+  }
+  
+  public void keyReleased() {
+    if(keyCode == 32) input = false;
+    jugador.keyReleased();
+    torre.keyReleased();
+  }
+  
+}
