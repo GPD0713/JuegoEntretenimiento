@@ -1,0 +1,224 @@
+//Clase del jugador
+
+class Jugador {
+
+  float x, y, rAtaque;
+  int vx, vy;
+  boolean choco;
+  int r, poder;
+  boolean upPressed, downPressed, leftPressed, rightPressed, atacar;
+  color blue255, blue254;
+  color black, white;
+  PImage mapa;
+  PImage mapaPoderes;
+  int contador;
+  int puntos;
+  int sumaBala;
+  int counter;
+  boolean espacio;
+  
+  BalasJ [] balas;
+  
+  Jugador(float _x, float _y) {
+    
+    puntos = 1;
+    sumaBala = 0;
+    espacio = false;
+    balas = new BalasJ[100];
+    for(int i=0; i<balas.length; i++) 
+      balas[i] = new BalasJ(x, y, 20);
+    
+    contador = 0;
+    counter = 0;
+    x = _x;
+    y = _y;
+    vx = vy = 2;
+    poder = 0;
+    r = 10;
+    rAtaque = 25;
+    upPressed = downPressed = leftPressed = rightPressed = false;
+    white = color(255, 255, 255);
+    blue255 = color(0, 0, 255); blue254 = color(0, 0, 254);
+    black = color(0, 0, 0);
+    mapa = loadImage("./mapa/mapa.png");
+    mapaPoderes = loadImage("./mapa/mapaTorres.png");
+    
+  }
+  
+  public void pintar() {
+    
+    contador ++;
+    counter --;
+    movimiento();
+    
+    if(counter > 0) fill(255, 220, 189, 200);
+    else fill(255, 220, 189, 30);
+    
+    ellipse(x, y, rAtaque*2, rAtaque*2);
+    fill(255, 220, 189);
+    ellipse(x, y, r*2, r*2);
+    
+    for(int i=0; i<balas.length; i++) {
+      balas[i].pintar();
+    }
+    
+  }
+  
+  void movimiento() {
+    vx = 2;
+    vy = 2;
+    if(upPressed) upMovement(); 
+    if(downPressed) downMovement();
+    if(leftPressed) leftMovement();
+    if(rightPressed) rightMovement();
+  }
+  
+  void upMovement() {
+    if(tocar(x, y - r - vy)) 
+      y -= vy;
+    else
+      vy = 0;
+  }
+  
+  void downMovement() {
+    if(tocar(x, y + r - 1 + vy)) 
+      y += vy;
+    else
+      vy = 0;
+  }
+  
+  void leftMovement() {
+    if(tocar(x - r - vx, y)) 
+      x -= vx;
+    else
+      vx = 0;
+  }
+  
+  void rightMovement() {
+    if(tocar(x + r + vx - 1, y)) 
+      x += vx;
+    else
+      vx = 0;
+  }
+  
+  void conteo() {
+    contador ++;
+  }
+  
+  boolean tocar(float _x, float _y) {
+   
+    int loc = (int)_x + (int)_y * mapa.width;
+    loc = constrain(loc, 0, mapa.pixels.length - 1);
+    return(mapa.pixels[loc] == white);
+    
+  }
+  
+  int tocarPoder(float _x, float _y) {
+    
+    int loc = (int)_x + (int)_y * mapaPoderes.width;
+   // loc = constrain(loc, 0, mapa.pixels.length - 1);
+    
+    if(mapaPoderes.pixels[loc] == blue255){
+      return 0;
+    } else if(mapaPoderes.pixels[loc] == blue254) {
+      return 1;
+    } else {
+     
+      return poder;
+    }
+    
+  }
+  
+  void ataque() {
+    
+    PVector p = new PVector(0,0);
+    for(int i = 0; i < nivel01.oleada.m.size(); i++) {
+      for(int j = 0; j < nivel01.oleada.m.get(i).m.size(); j++) {
+          Malos malo02 = nivel01.oleada.m.get(i).m.get(j);
+            float dis = dist(x, y, malo02.x, malo02.y);
+            if(dis <= 30 && counter <= 0) {
+              
+              malo02.vida -= 1;
+              malo02.c = color(255, 0, 0);
+              
+              if(malo02.vida == 0) {
+                if(malo02.tipo == 2 && !malo02.sumo) {
+                  nivel01.puntaje(100);
+                  malo02.sumo = true;
+                } else if(malo02.tipo == 1 && !malo02.sumo) {
+                  nivel01.puntaje(75);
+                  malo02.sumo = true;
+                }
+                malo02.llego = true;
+              }
+             
+              
+            }
+           
+      }
+    }
+    
+  }
+  
+  void atacar(float _x, float _y) {
+    
+    nivel01.puntos -= 50;
+    
+    if(sumaBala == 100) sumaBala = 0;
+    balas[sumaBala].setup(x, y, 20);
+    balas[sumaBala].shoot(1, _x, _y);
+    balas[sumaBala].enUso = true;
+    sumaBala ++;   
+       
+  }
+  
+  public void mousePressed() {
+    
+      if(!espacio) {
+        if(mouseX > 150 && mouseX < width-150 && nivel01.puntos - 50 >= 0) {
+          atacar(mouseX, mouseY);
+        }
+      }
+  }
+  
+  public void mouseReleased() {
+    poder = tocarPoder(mouseX, mouseY);
+    //println(poder + "  pdo");
+  }
+  
+  public void keyPressed() {
+    //println(keyCode);
+    if(keyCode == 38 || keyCode == 87) upPressed = true;
+    
+    if(keyCode == 40 || keyCode == 83) downPressed = true;
+    
+    if(keyCode == 37 || keyCode == 65) leftPressed = true;
+    
+    if(keyCode == 39 || keyCode == 68) rightPressed = true;
+    
+    if(keyCode == 32) espacio = true;
+  }
+  
+  public void keyReleased() {
+    if(keyCode == 38 || keyCode == 87) upPressed = false;
+    
+    if(keyCode == 40 || keyCode == 83) downPressed = false;
+    
+    if(keyCode == 37 || keyCode == 65) leftPressed = false;
+    
+    if(keyCode == 39 || keyCode == 68) rightPressed = false;
+    
+    if(keyCode == 32){
+      
+      espacio = false;
+      
+      if(contador >= 10) { 
+        ataque();
+        contador = 0;
+      }
+      
+    }
+    
+  }
+
+}
