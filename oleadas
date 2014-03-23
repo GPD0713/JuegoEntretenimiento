@@ -1,0 +1,137 @@
+//Clase para las oleadas
+
+class Oleadas {
+  
+  int contador;
+  ArrayList <dibujarMalos> m; 
+  public int nOleadas, nMalo;
+  int [] nMalosOleada;
+  int [] nMalos01, nMalos02;
+  boolean nuevo, primera;
+  int dirOleada;
+  int c;
+  IntList randomDireccion;
+  int anteriorDireccion;
+  int counter;
+  int counterText;
+  boolean end;
+  
+  Oleadas() {
+    
+    nuevo = true; primera = false; end = false;
+    nuevo = true; primera = true;
+    nOleadas = 0;
+    contador = 660;
+    nMalosOleada = new int[13];
+    nMalo = 0;
+    c = 0;
+    counter = 600;
+    
+    nMalos01 = new int[12];
+    nMalos02 = new int[12];
+    
+    randomDireccion = new IntList();
+    randomDireccion.append(1); randomDireccion.append(2); randomDireccion.append(3); randomDireccion.append(4);
+    
+    int anteriorDireccion;
+    
+    dirOleada = 0;
+    counterText = 0;
+    //dirOleada = 5;
+    
+    nMalos01[0] = 10; nMalos01[1] = 5; nMalos01[2] = 15; nMalos01[3] = 0; nMalos01[4] = 20; nMalos01[5] = 20; nMalos01[6] = 20; nMalos01[7] = 30; nMalos01[8] = 40; nMalos01[9] = 30; nMalos01[10] = 40; nMalos01[11] = 10;
+    nMalos02[0] = 0; nMalos02[1] = 5; nMalos02[2] = 5; nMalos02[3] = 10; nMalos02[4] = 12; nMalos02[5] = 12; nMalos02[6] = 12; nMalos02[7] = 18; nMalos02[8] = 18; nMalos02[9] = 22; nMalos02[10] = 24; nMalos02[11] = 60;
+    
+    m = new ArrayList<dibujarMalos>();
+    
+    anteriorDireccion = 0;
+    
+    //println(randomDireccion.size());
+    
+  }
+  
+  public void pintar() {
+    
+    nuevaOleada();
+    
+    if(end) {
+      nivel01.acabo = true;
+      nivel01.txt = "Ganaste";
+    }
+    
+    for(int i=0; i<m.size(); i++) {
+      
+      dibujarMalos malo = m.get(i);
+      malo.pintar();
+      
+    }
+  }
+  
+  void nuevaOleada() {
+    contador --;
+    counter --;
+    
+    counterText = floor(contador/60);
+    
+    if(!primera) {
+      
+      if(contador <= 0) {
+        
+        dirOleada ++;
+        c = nMalos02[nOleadas] + nMalos01[nOleadas] + 1;
+        m.add(new dibujarMalos(nMalos01[nOleadas], nMalos02[nOleadas], dirOleada, 1)); //int _malos1, int _malos2, int _dirOleada, int _nLineas
+        nOleadas += 1;
+        primera = true;
+        contador = c * 60;
+       
+      }
+      
+    } else {
+      
+      if(contador == 0 && nuevo) {
+        
+        if(dirOleada < 4) {
+          
+          dirOleada ++;
+          c = nMalos02[nOleadas] + nMalos01[nOleadas] + 1;
+          m.add(new dibujarMalos(nMalos01[nOleadas], nMalos02[nOleadas], dirOleada, 2)); //int _malos1, int _malos2, int _dirOleada, int _nLineas
+          nOleadas += 1;
+          nuevo = false;
+          contador = c * 60;
+          
+        } else {
+          
+          dirOleada ++;
+          int uno = 0;
+          randomDireccion.shuffle();
+          if(anteriorDireccion == randomDireccion.get(0)) uno ++;
+          c = nMalos02[nOleadas] + nMalos01[nOleadas] + 1;
+          m.add(new dibujarMalos(nMalos01[nOleadas], nMalos02[nOleadas], randomDireccion.get(uno), 2)); //int _malos1, int _malos2, int _dirOleada, int _nLineas
+          nOleadas += 1;
+          nuevo = false;
+          anteriorDireccion = randomDireccion.get(uno);
+          contador = c * 60;
+          
+        } 
+       
+      }
+      
+    }
+    
+    //println(counter + "    ,   "  + dirOleada);
+    if(dirOleada > 12 && counter <= 0) {
+      //println("ganaste");
+      end = true;
+    }
+    
+  }
+  
+  
+  
+  PVector posicion(int i, int j) {
+    dibujarMalos malo = m.get(i);
+    PVector p = malo.posicion(j);
+    return p;
+  }
+  
+}
