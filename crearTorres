@@ -1,0 +1,316 @@
+//Clase para pintar las torres
+
+class crearTorres {
+  
+  public int x, y, puntos;
+  int sumaX, sumaY;
+  public float r, rAtaque, v;
+  public boolean apreto;
+  int sector;
+  int radioTorre;
+  PImage mapa;
+  color red255, red254, red253, red252, red251;
+  color green255, green254, blue255, blue254;
+  color e;
+  boolean[][] torresEnUso;
+  ArrayList<Torres> t;
+  public int nTorres;
+  int elegirTorre, resta;
+  int nEnemigo;
+  boolean espacio, mouse;
+  boolean sumo;
+  
+  crearTorres() {
+    
+    mapa = loadImage("./mapa/mapaTorres.png");
+    elegirTorre = 0;
+    nEnemigo = 0;
+    red255 = color(255, 0, 0); red254 = color(254, 0, 0); red253 = color(253, 0, 0); red252 = color(252, 0, 0); red251 = color(251, 0, 0);
+    green255 = color(0, 255, 0); green254 = color(0, 254, 0); 
+    sector = 0;
+    sumaX = 0;
+    sumaY = 0;
+    nTorres = 0;
+    resta = 2;
+    radioTorre = 0;
+    espacio = false;
+    mouse = false;
+    sumo = false;
+    t = new ArrayList<Torres>();
+    torresEnUso = new boolean[4][5];
+    for(int i=0; i<4; i++) {
+      for(int j=0; j<5; j++) {
+        torresEnUso[i][j] = false;
+      }
+    }
+  
+  }
+  
+  public void pintar() {
+    for(int i=0; i<t.size(); i++) {
+      Torres torre = t.get(i);
+      torre.entro = true;
+      
+      torre.pintar();
+    }
+  }
+  
+  public void mousePressed() {
+    mouse = true;
+    if(espacio) {
+      
+      if(mouseX <= w && mouseY <= h) sector = 1;
+      if(mouseX < w && mouseY > h) sector = 3;
+      if(mouseX >= w && mouseY <= h) sector = 2;
+      if(mouseX > w && mouseY > h) sector = 4;
+    
+      //cualTorre();
+
+      colocarTorre(elegirTorre);
+    }
+  }
+  
+  public void keyPressed() {
+  
+    if(keyCode == 32) {
+    
+      espacio = true;
+            
+    }
+  
+  }
+  
+  public void keyReleased() {
+  
+    if(keyCode == 32) {
+      
+      sumo = false;      
+      espacio = false;
+      if(mouse) {
+        t.get(radioTorre).radio = false;
+        if(sumo) radioTorre ++;
+        mouse = false;
+      }
+      
+    
+    }
+  }
+  /*
+  void cualTorre() {
+    elegirTorre = tocarTorre(mouseX, mouseY);
+  }*/
+  
+  public void mouseReleased() {
+    for(int i=0; i<t.size(); i++) {
+      Torres torre = t.get(i);
+      torre.radio = false;
+    }
+    
+  }
+  
+  void colocarTorre(int elegirTorre) {
+    int state = 0;
+    int tiempo = 0;
+    if(elegirTorre == 0) {
+      
+      state = tocar(mouseX, mouseY);
+      r = 20;
+      rAtaque = 140;
+      v = 25;
+      puntos = 1;
+      tiempo = 25;
+      resta = 1000;
+      nEnemigo = 1;
+      e = color(20, 210, 200);
+      
+    } else if(elegirTorre == 1)  {
+      
+      resta = 1400;
+      state = tocar(mouseX, mouseY);
+      r = 20;
+      rAtaque = 140;
+      v = 30;
+      puntos = 1;
+      tiempo = 25;
+      nEnemigo = 2;
+      e = color(170, 160, 0);
+      
+    } else if(elegirTorre == 2){
+      
+      resta = 2000;
+      state = tocar(mouseX, mouseY);
+      r = 20;
+      rAtaque = 160;
+      v = 25;
+      puntos = 3;
+      nEnemigo = 1;
+      tiempo = 25;
+      e = color(120, 40, 10);
+      
+    }
+    
+    if(state == 1 || state == 2 ||  state == 3 || state == 4 || state == 5) {
+      torre(state);
+      //println(x + "   " + y);
+      if(nivel01.puntos - resta >= 0) {
+        if(!torresEnUso[sector-1][state-1]) {
+          
+          t.add(new Torres(x, y, r, rAtaque, v, puntos, tiempo, sector-1, state-1, puntos, nEnemigo, e));
+          torresEnUso[sector-1][state-1] = true;
+          sumo = true;
+          nTorres ++;
+          
+          nivel01.puntos -= resta;
+          
+        }
+      }
+    }
+    
+  }
+  
+  void  torre(int estado) {
+    
+    if(sector == 1) {
+      sumaX = 150;
+      sumaY = 140;
+      sector1(estado);
+    } else if(sector == 2) {
+      sumaX = 550;
+      sumaY = 140;
+      sector2(estado);
+    } else if(sector == 3) {
+      sumaX = 150; 
+      sumaY = 460;
+      sector3(estado);
+    } else if(sector == 4) {
+      sumaX = 550;
+      sumaY = 460;
+      sector4(estado);
+    }
+    
+  }
+  
+  void sector1(int estado) {
+    
+    if(estado == 1) {
+      x = sumaX + 35; 
+      y = sumaY + 30;
+    } else if(estado == 2) {
+      x = sumaX + 105;
+      y = sumaY + 30;
+    } else if(estado == 3) {
+      x = sumaX + 170;
+      y = sumaY + 30;
+    } else if(estado == 4) {
+      x = sumaX + 170;
+      y = sumaY - 35; 
+    } else if(estado == 5) {
+      x = sumaX + 170;
+      y = sumaY - 105;
+    }
+    
+  }
+  
+  void sector2(int estado) {
+    if(estado == 1) {
+      x = sumaX + 30; 
+      y = sumaY - 105;
+    } else if(estado == 2) {
+      x = sumaX + 30;
+      y = sumaY - 35;
+    } else if(estado == 3) {
+      x = sumaX + 30;
+      y = sumaY + 30;
+    } else if(estado == 4) {
+      x = sumaX + 95;
+      y = sumaY + 30;
+    } else if(estado == 5) {
+      x = sumaX + 165;
+      y = sumaY + 30;
+    }
+  }
+  
+  void sector3(int estado) {
+    if(estado == 1) {
+      x = sumaX + 170; 
+      y = sumaY + 105;
+    } else if(estado == 2) {
+      x = sumaX + 170;
+      y = sumaY + 35;
+    } else if(estado == 3) {
+      x = sumaX + 170;
+      y = sumaY - 30;
+    } else if(estado == 4) {
+      x = sumaX + 105;
+      y = sumaY - 30;
+    } else if(estado == 5) {
+      x = sumaX + 35;
+      y = sumaY - 30;
+    }
+  }
+  
+  void sector4(int estado) {
+    if(estado == 1) {
+      x = sumaX + 165; 
+      y = sumaY - 30;
+    } else if(estado == 2) {
+      x = sumaX + 95;
+      y = sumaY - 30;
+    } else if(estado == 3) {
+      x = sumaX + 30;
+      y = sumaY - 30;
+    } else if(estado == 4) {
+      x = sumaX + 30;
+      y = sumaY + 35;
+    } else if(estado == 5) {
+      x = sumaX + 30;
+      y = sumaY + 105;
+    }
+    
+  }
+  
+  public void disparar(int i, float _x, float _y, int _vida, int index, int j) {
+    Torres torre = t.get(i);
+    //torre.disparo(_x, _y, _vida, index, j, i);
+  }
+  
+  int tocar(float _x, float _y) {
+    
+    int loc = (int)_x + (int)_y * mapa.width;
+    //loc = constrain(loc, 0, mapa.pixels.length - 1);
+    
+    if(mapa.pixels[loc] == red255){
+      
+      return 5;
+    } else if(mapa.pixels[loc] == red254)
+      return 4;
+    else if(mapa.pixels[loc] == red253)
+      return 3;
+    else if(mapa.pixels[loc] == red252)
+      return 2;
+    else if(mapa.pixels[loc] == red251)
+      return 1;
+    else 
+      return 100;
+    
+  }
+  
+  int tocarTorre(float _x, float _y) {
+    
+    int loc = (int)_x + (int)_y * mapa.width;
+    //loc = constrain(loc, 0, mapa.pixels.length - 1);
+    
+    if(mapa.pixels[loc] == green255){
+      resta = 2;
+      return 0;
+    } else if(mapa.pixels[loc] == green254) {
+      resta = 5;
+      return 1;
+    } else {
+     
+      return elegirTorre;
+    }
+    
+  }
+  
+}
