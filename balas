@@ -1,0 +1,93 @@
+class Balas {
+  
+  public float x, y, x2, y2, r, dis, theta, v, vx, vy;
+  public int vidaI, dano, index, jndex;
+  public PVector p, radianes;
+  public boolean enUso, estrello;
+  color c;
+  int contador;
+  int sector, state;
+  
+  Balas(float _x, float _y, float _v, int _dano) {  
+    
+    c = color(18, 255, 164);
+    
+    setup(_x, _y, _v, _dano);
+    
+  }
+  
+  
+  
+  public void setup(float _x, float _y, float _v, int _dano) {
+    
+    x = _x; y = _y;  
+    x2 = 0; y2 = 0; r = 4; v = _v; vx = 0; vy = 0; dano = _dano;
+    enUso = estrello = false;
+    index = 0;
+    jndex = 0;
+    theta = 0;
+    
+  }
+  
+  
+  public void pintar(int v) {
+    
+    fill(c);
+    c = color(18, 255, 164);
+    if(enUso && !estrello) {
+      
+      ellipse(x, y, r, r);
+      dibujarMalos malo = nivel01.oleada.m.get(index);
+      Malos malo02 = malo.m.get(jndex);
+     
+      dis = dist(x, y, malo02.x, malo02.y);
+      
+      if(dis <= 50) {
+        
+        
+        malo02.vida -= dano;
+        malo02.c = color(255, 255, 0);
+        
+        if(malo02.vida <= 0) {
+          //println("entra");
+          malo02.llego = true;
+          estrello = true;
+          if(malo02.tipo == 2 && !malo02.sumo) {
+            nivel01.puntaje(75);
+            malo02.sumo = true;
+          } else if(malo02.tipo == 1 && !malo02.sumo) {
+            nivel01.puntaje(50);
+            malo02.sumo = true;
+          }
+         
+          
+        }
+        
+        enUso = false;
+          
+      }
+      
+      x += vx;
+      y += vy;      
+      
+    }  
+    
+  }
+  
+  public void shoot(float _x, float _y) {
+    
+    enUso = true;
+    
+    x2 = (_x + (nivel01.oleada.m.get(index).m.get(jndex).vx * 2)) - x;
+    y2 = (_y + (nivel01.oleada.m.get(index).m.get(jndex).vy * 2)) - y;
+    
+    radianes = new PVector(x2, y2);
+    
+    theta = radianes.heading();
+    
+    vx = v*cos(theta);
+    vy = v*sin(theta);
+    
+  }
+  
+}
