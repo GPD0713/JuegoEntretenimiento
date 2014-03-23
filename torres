@@ -1,0 +1,165 @@
+
+
+class Torres {
+  public float x, y, r, rAtaque, x2, y2, x3, y3;
+  int v, tiempo;
+  public boolean entro, radio;
+  color c, e;
+  Balas [] balas;
+  int sumaBala;
+  boolean ataque;
+  int contadorAtaque;
+  int ataqueI, ataqueJ;
+  int sector, state;
+  int dano;
+  int sumaEnemigo;
+  int nEnemigo;
+  
+  Torres(int _x, int _y, float _r, float _rAtaque, float _v, int puntos, int _tiempo, int _sector, int _state, int _dano, int _nEnemigo, color _e) {
+    
+    balas = new Balas[100];
+    for(int i=0; i<balas.length; i++) 
+      balas[i] = new Balas(x, y, v, dano);
+    
+    x = _x;
+    y = _y;
+    
+    nEnemigo = _nEnemigo;
+    
+    dano = _dano;
+    
+    sector = _sector;
+    state = _state;
+    
+    sumaEnemigo = 0;
+    
+    x2 = 0;
+    y2 = 0;
+    
+    x3 = 0;
+    y3 = 0;
+    
+    ataqueI = 0;
+    ataqueJ = 0;
+    
+    sumaBala = 0;
+    contadorAtaque = 0;
+    
+    tiempo = _tiempo;
+    
+    r = _r;
+    rAtaque = _rAtaque;
+    
+    ataque = true;
+    
+    v = (int)_v;
+    
+    c = _e;
+    e = _e;
+    
+    entro = false;
+    radio = true;
+    
+  }
+  
+  public void pintar() {
+    
+    contadorAtaque ++;
+    if(entro) {
+      
+      if(radio) {
+        fill(255, 255, 255, 100);
+        ellipse(x, y, rAtaque*2, rAtaque*2);
+      }
+      
+      fill(c);
+      ellipse(x, y, r*2, r*2);
+      
+      c = e;
+      
+      for(int i=0; i<nivel01.oleada.m.size(); i++) {
+        
+        for(int j=0; j<nivel01.oleada.m.get(i).m.size(); j++) {
+          
+          disparo(nivel01.oleada.m.get(i).m.get(j).x, nivel01.oleada.m.get(i).m.get(j).y, i, j );
+        
+      }
+      
+    
+    }
+    
+      }
+      for(int i=0; i<balas.length; i++) {
+        balas[i].pintar(v);
+      }
+    
+  }
+  
+  public void disparo(float _x, float _y, int i, int j) {
+       
+       
+       
+      dibujarMalos malo = nivel01.oleada.m.get(i);
+      Malos malo02 = malo.m.get(j);
+      
+      x3 = malo02.x;
+      y3 = malo02.y;
+      
+      float dis = dist(x3, y3, x, y);
+      
+      if(dis <= rAtaque) {
+        if(ataque && malo02.torres[sector][state] == 0) {
+          sumaEnemigo ++;
+          if(nEnemigo == sumaEnemigo) {
+            ataque = false;
+          }
+          //contadorAtaque = 1;
+          
+          malo02.torres[sector][state] = 1;
+        }
+        //println(ataque);
+        if(malo02.llego && malo02.torres[sector][state] == 1) {
+           malo02.torres[sector][state] = 0;
+           sumaEnemigo --;
+           
+           ataque = true;
+           
+         } 
+       
+        if(malo02.torres[sector][state] == 1) {
+          
+          x2 = _x - x;
+          y2 = _y - y;
+          
+          if(contadorAtaque % tiempo == 0 && malo02.vida > 0 && !malo02.llego) {
+            
+            if(sumaBala == 100) sumaBala = 0;
+            
+            balas[sumaBala].setup(x, y, v, dano);
+
+            balas[sumaBala].index = i;
+            balas[sumaBala].jndex = j;
+            
+            balas[sumaBala].shoot(malo02.x, malo02.y);
+
+            sumaBala ++;
+            
+          }
+         
+        }
+        
+      } else {
+  
+          if(malo02.torres[sector][state] == 1) {
+            malo02.torres[sector][state] = 0;
+            
+            ataque = true;
+            sumaEnemigo --;
+          }
+          
+   
+    }
+  }
+   
+  
+}
