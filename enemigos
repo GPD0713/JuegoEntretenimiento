@@ -1,0 +1,141 @@
+class Malos {
+  
+  public float x, y, vx, vy, r, vida, v, theta, x2, y2;
+  int sumaX, sumaY;
+  boolean llego, entra, ataque, sumo;
+  int dirOleada;
+  int t;
+  color c, d;
+  int suma;
+  int tipo;
+  int dano;
+  int counter;
+  PVector radianes;
+  
+  int [][] torres;
+ 
+  Malos(float _vida, float _r, int _dirOleada, int _tipo, color _c,  float _v, int _dano, int _suma) { //vida, r, dirOleada, tipo, col, v, dano, 0
+    
+    vida = _vida; r = _r; dirOleada = _dirOleada; tipo = _tipo; c = _c; d = _c; v = _v; dano = _dano; suma = _suma;
+
+    x = 0; y = 0; vx = 0; vy = 0; t = 0; theta = 0; x2 = 0; y2 = 0; sumaX = 0; sumaY = 0; counter = 0;
+
+    llego = false;
+    entra = true;
+    sumo = false;
+    
+    torres = new int[4][5];
+    
+    direccion();
+
+  }
+  
+  public void pintar() {
+    
+    if(vida == 0) {
+      llego = true;
+    }
+    
+    if(!llego && !sumo) {
+      
+      fill(c);
+      ellipse(x,y,r,r);
+      c = d;
+      movimiento();
+      
+    }
+    
+  }
+  
+  
+  void movimiento() {
+    
+    x += vx;
+    y += vy;
+    colision();
+    
+  }
+  
+  void colision() {
+    
+    float dis = dist(width/2, height/2, x, y);
+    
+    if(dis <= 50) {
+      
+      llego = true;
+      sumo = true;
+      nivel01.vida -= 1;
+      nivel01.tinta(); 
+      
+    } 
+    PVector p = new PVector(x, y);
+    dis = dist(nivel01.jugador.x, nivel01.jugador.y, x, y);
+    if(dis <= 18) {
+      
+      PVector pp = new PVector(nivel01.jugador.x, nivel01.jugador.y);
+      pp.add(p);
+      nivel01.jugador.x += pp.x*0.01;
+      nivel01.jugador.y += pp.y*0.01;
+      nivel01.jugador.counter = 15;
+      
+    } 
+    
+  }
+  
+  public void direccion() {    
+    println(dirOleada);
+    if(dirOleada == 1) {
+      x = 150;
+      y = height/2;
+      y += suma;
+      sumaX = 0;
+      sumaY = suma;
+    
+    } else if(dirOleada == 2) {
+      x = width/2;
+      y = 0;
+      x += suma;
+      sumaX = suma;
+      sumaY = 0;
+      
+    } else if(dirOleada == 3) {
+      x = width-150;
+      y = height/2;
+      y += suma;
+      sumaX = 0;
+      sumaY = suma;
+      
+    } else if(dirOleada == 4) {
+      x = width/2;
+      y = height;
+      x += suma;
+      sumaX = suma;
+      sumaY = 0;
+    } else if(dirOleada == 5) {
+      x = 0;
+      y = height/2;
+      x += suma;
+      sumaX = suma;
+      sumaY = 0;
+    }
+       
+    x2 = (width/2 - x) + sumaX;
+    y2 = (height/2 - y) + sumaY;
+    
+    radianes = new PVector(x2, y2);
+    
+    theta = radianes.heading();
+    
+    vx = v*cos(theta);
+    vy = v*sin(theta);
+    
+  }
+  
+  PVector posicion() {
+    PVector p = new PVector(x, y);
+    return p;
+  }
+  
+
+  
+}
